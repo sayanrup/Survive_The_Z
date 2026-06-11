@@ -9,7 +9,10 @@ export const MODELS = [
 ];
 
 // Free-tier OpenRouter models used for auto fallback routing ($0 cost).
+// "openrouter/free" is tried first - OpenRouter auto-allocates an available
+// free model - with specific :free models as fallbacks if that's unavailable.
 export const FREE_MODELS = [
+  'openrouter/free',
   'meta-llama/llama-3.3-70b-instruct:free',
   'deepseek/deepseek-chat-v3-0324:free',
   'google/gemini-2.0-flash-exp:free',
