@@ -1,8 +1,9 @@
 // Central game state shape and helper mutators shared across core/ui modules.
 export const STAT_MAX = 100;
 
-export function createNewGame(playerName) {
+export function createNewGame(playerName, scenario = null) {
   return {
+    scenario: scenario || null,
     player: {
       name: playerName || 'Survivor',
       level: 1,

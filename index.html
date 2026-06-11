@@ -14,10 +14,38 @@
       <label for="player-name">Survivor name</label>
       <input type="text" id="player-name" maxlength="20" placeholder="Survivor" />
       <div class="start-buttons">
-        <button data-action="new-game">New Game</button>
+        <button data-action="show-ai-setup">New Game</button>
         <button id="continue-btn" data-action="continue-game" hidden>Continue</button>
       </div>
       <p class="copyright">&copy; 2026 Sayan - an AI-enthusiastic PM</p>
+    </div>
+  </div>
+
+  <div id="ai-setup-screen" class="screen" hidden>
+    <div class="start-card setup-card">
+      <h1>AI Game Master</h1>
+      <p class="tagline">Optionally connect an OpenRouter API key for live AI narration, or skip to play offline with the classic local narrator.</p>
+      <div id="ai-setup-fields" class="ai-settings"></div>
+      <div class="start-buttons">
+        <button data-action="show-name">Back</button>
+        <button data-action="show-scenario">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="scenario-screen" class="screen" hidden>
+    <div class="start-card scenario-card-wrap">
+      <h1>Choose Your Story</h1>
+      <p class="tagline">Pick a pre-loaded storyline, or describe your own. This sets the tone for the AI Game Master's narration.</p>
+      <div id="scenario-grid" class="scenario-grid"></div>
+      <div class="custom-scenario">
+        <label for="custom-story-input">Or write a custom storyline</label>
+        <textarea id="custom-story-input" rows="3" placeholder="e.g. A snowed-in mountain lodge, day 3 of the outbreak..."></textarea>
+      </div>
+      <div class="start-buttons">
+        <button data-action="show-ai-setup">Back</button>
+        <button data-action="start-game">Start Game</button>
+      </div>
     </div>
   </div>
 

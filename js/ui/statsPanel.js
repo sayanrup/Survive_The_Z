@@ -15,6 +15,10 @@ export function renderStats(state) {
   const p = state.player;
   const weapon = p.equippedWeapon ? ITEMS[p.equippedWeapon].name : 'None';
   const armor = p.equippedArmor ? ITEMS[p.equippedArmor].name : 'None';
+  const scenario = state.scenario;
+  const scenarioInfo = scenario
+    ? `<div class="equip-info"><div><span class="equip-label">Storyline:</span> ${scenario.icon || ''} ${scenario.title}</div></div>`
+    : '';
   return `
     <h2>${p.name}</h2>
     <div class="level-info">Level ${p.level} &middot; XP ${p.xp}/${p.xpToNext}</div>
@@ -26,5 +30,6 @@ export function renderStats(state) {
       <div><span class="equip-label">Weapon:</span> ${weapon}</div>
       <div><span class="equip-label">Armor:</span> ${armor}</div>
     </div>
+    ${scenarioInfo}
   `;
 }

@@ -12,16 +12,38 @@ import { ITEMS } from './data/items.js';
 import { sendPlayerAction } from './core/aiGameMaster.js';
 import { loadAiSettings, saveAiSettings } from './state/aiSettings.js';
 import { exportSaveToFile, importSaveFromFile } from './state/exportImport.js';
+import { renderAiSettingsFields } from './ui/aiPanel.js';
+import { renderScenarioGrid } from './ui/scenarioPanel.js';
+import { SCENARIOS } from './data/scenarios.js';
 
 let state = null;
 let aiSettings = loadAiSettings();
+let selectedScenarioId = null;
+let customStoryText = '';
 
 const startScreen = document.getElementById('start-screen');
+const aiSetupScreen = document.getElementById('ai-setup-screen');
+const scenarioScreen = document.getElementById('scenario-screen');
 const gameScreen = document.getElementById('game-screen');
 const continueBtn = document.getElementById('continue-btn');
+const screens = [startScreen, aiSetupScreen, scenarioScreen, gameScreen];
 
 if (hasSave()) {
   continueBtn.hidden = false;
+}
+
+function showScreen(screen) {
+  for (const s of screens) {
+    s.hidden = s !== screen;
+  }
+}
+
+function renderAiSetupFields() {
+  document.getElementById('ai-setup-fields').innerHTML = renderAiSettingsFields(aiSettings);
+}
+
+function renderScenarioScreen() {
+  document.getElementById('scenario-grid').innerHTML = renderScenarioGrid(selectedScenarioId);
 }
 
 document.body.addEventListener('click', async (event) => {
@@ -30,7 +52,24 @@ document.body.addEventListener('click', async (event) => {
   const action = target.dataset.action;
 
   switch (action) {
-    case 'new-game':
+    case 'show-ai-setup':
+      renderAiSetupFields();
+      showScreen(aiSetupScreen);
+      return;
+    case 'show-name':
+      showScreen(startScreen);
+      return;
+    case 'show-scenario':
+      renderScenarioScreen();
+      showScreen(scenarioScreen);
+      return;
+    case 'select-scenario':
+      selectedScenarioId = selectedScenarioId === target.dataset.scenario ? null : target.dataset.scenario;
+      customStoryText = '';
+      document.getElementById('custom-story-input').value = '';
+      renderScenarioScreen();
+      return;
+    case 'start-game':
       startNewGame();
       return;
     case 'continue-game':
@@ -39,9 +78,10 @@ document.body.addEventListener('click', async (event) => {
     case 'restart':
       clearSave();
       state = null;
+      selectedScenarioId = null;
+      customStoryText = '';
       continueBtn.hidden = true;
-      gameScreen.hidden = true;
-      startScreen.hidden = false;
+      showScreen(startScreen);
       return;
     case 'export-save':
       if (state) exportSaveToFile(state);
@@ -96,7 +136,11 @@ document.body.addEventListener('change', async (event) => {
   if (target.id === 'ai-mode') {
     aiSettings.mode = target.value;
     saveAiSettings(aiSettings);
-    if (state) renderGame(state, aiSettings);
+    if (state) {
+      renderGame(state, aiSettings);
+    } else {
+      renderAiSetupFields();
+    }
     return;
   }
 
@@ -132,6 +176,12 @@ document.body.addEventListener('input', (event) => {
   } else if (target.id === 'ai-custom-model') {
     aiSettings.customModel = target.value;
     saveAiSettings(aiSettings);
+  } else if (target.id === 'custom-story-input') {
+    customStoryText = target.value;
+    if (target.value.trim() && selectedScenarioId) {
+      selectedScenarioId = null;
+      document.querySelectorAll('.scenario-card.selected').forEach((el) => el.classList.remove('selected'));
+    }
   }
 });
 
@@ -158,12 +208,36 @@ document.body.addEventListener('submit', async (event) => {
   }
 });
 
+function getSelectedScenario() {
+  if (customStoryText.trim()) {
+    return {
+      id: 'custom',
+      icon: '📝',
+      title: 'Custom Storyline',
+      source: 'User-defined',
+      setting: 'Custom',
+      description: customStoryText.trim(),
+      objectives: [],
+      threats: [],
+      uniqueMechanics: [],
+    };
+  }
+  if (selectedScenarioId) {
+    return SCENARIOS.find((s) => s.id === selectedScenarioId) || null;
+  }
+  return null;
+}
+
 function startNewGame() {
   const nameInput = document.getElementById('player-name');
-  state = createNewGame(nameInput.value.trim());
+  const scenario = getSelectedScenario();
+  state = createNewGame(nameInput.value.trim(), scenario);
+  if (scenario) {
+    addLog(state, `${scenario.icon ? scenario.icon + ' ' : ''}${scenario.title}`.trim());
+    addLog(state, scenario.description);
+  }
   addLog(state, 'You wake up at the survivor camp. The world outside has changed.');
-  startScreen.hidden = true;
-  gameScreen.hidden = false;
+  showScreen(gameScreen);
   finishTurn();
 }
 
@@ -173,8 +247,7 @@ function continueGame() {
     startNewGame();
     return;
   }
-  startScreen.hidden = true;
-  gameScreen.hidden = false;
+  showScreen(gameScreen);
   renderGame(state, aiSettings);
 }
 
