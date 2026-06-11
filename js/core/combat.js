@@ -28,7 +28,7 @@ export async function startCombat(state, enemyId) {
     xp: template.xp,
     loot: template.loot,
   };
-  const text = await generateNarrative('combatStart', { enemyName: template.name });
+  const text = await generateNarrative('combatStart', { enemyName: template.name, scenario: state.scenario });
   addLog(state, text);
 }
 
@@ -115,11 +115,11 @@ export async function attemptFlee(state) {
   const fleeChance = 0.4 + state.player.stamina / 250; // 0.4 - 0.8
   modifyStat(state, 'stamina', -10);
   if (Math.random() < fleeChance) {
-    const text = await generateNarrative('combatFleeSuccess', { enemyName: combat.enemyName });
+    const text = await generateNarrative('combatFleeSuccess', { enemyName: combat.enemyName, scenario: state.scenario });
     addLog(state, text);
     state.combat = null;
   } else {
-    const text = await generateNarrative('combatFleeFail', { enemyName: combat.enemyName });
+    const text = await generateNarrative('combatFleeFail', { enemyName: combat.enemyName, scenario: state.scenario });
     addLog(state, text);
     await enemyAttack(state);
   }
@@ -127,7 +127,7 @@ export async function attemptFlee(state) {
 
 async function resolveVictory(state) {
   const combat = state.combat;
-  const text = await generateNarrative('combatVictory', { enemyName: combat.enemyName });
+  const text = await generateNarrative('combatVictory', { enemyName: combat.enemyName, scenario: state.scenario });
   addLog(state, text);
   grantXp(state, combat.xp);
 

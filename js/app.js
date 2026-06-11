@@ -174,6 +174,13 @@ document.body.addEventListener('click', async (event) => {
     case 'craft':
       craftItem(state, target.dataset.recipe);
       break;
+    case 'suggest-action': {
+      const input = document.getElementById('ai-command-input');
+      if (!input || input.disabled) return;
+      input.value = target.dataset.text || '';
+      document.getElementById('ai-command-form').requestSubmit();
+      return;
+    }
     default:
       return;
   }
@@ -248,6 +255,13 @@ document.body.addEventListener('submit', async (event) => {
   const submitBtn = event.target.querySelector('button[type="submit"]');
   input.disabled = true;
   submitBtn.disabled = true;
+
+  const logEl = document.getElementById('log-panel');
+  const loadingEl = document.createElement('div');
+  loadingEl.className = 'chat-message narrator';
+  loadingEl.innerHTML = '<div class="chat-bubble chat-loading"><span></span><span></span><span></span></div>';
+  logEl.appendChild(loadingEl);
+  logEl.scrollTop = logEl.scrollHeight;
 
   try {
     await sendPlayerAction(state, aiSettings, text);

@@ -39,7 +39,7 @@ export async function restAtCamp(state) {
   modifyStat(state, 'thirst', -15);
   state.world.day += 1;
   state.world.turn = 0;
-  const text = await generateNarrative('restAtCamp');
+  const text = await generateNarrative('restAtCamp', { scenario: state.scenario });
   addLog(state, text);
   applyStarvation(state);
 }

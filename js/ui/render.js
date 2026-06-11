@@ -12,7 +12,7 @@ export function renderGame(state, aiSettings) {
   document.getElementById('stats-panel').innerHTML = renderStats(state);
   document.getElementById('day-counter').textContent = `Day ${state.world.day}`;
 
-  document.getElementById('suggestions-panel').innerHTML = renderActions(state);
+  document.getElementById('suggestions-panel').innerHTML = renderActions(state, aiSettings);
   document.getElementById('inventory-panel').innerHTML = state.gameOver ? '' : renderInventory(state);
 
   const logEl = document.getElementById('log-panel');
