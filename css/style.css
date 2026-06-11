@@ -235,19 +235,72 @@ input[type="text"] {
   color: var(--text-dim);
 }
 
+#tab-nav {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.75rem 1.5rem 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-bg);
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+.tab-btn:hover:not(:disabled) {
+  background: var(--button-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.tab-btn.active {
+  background: var(--bg);
+  color: var(--accent);
+  border-color: var(--border);
+}
+
 #game-container {
-  display: grid;
-  grid-template-columns: 280px 1fr 300px;
-  gap: 1rem;
   padding: 1rem;
   max-width: 1400px;
   margin: 0 auto;
 }
 
+.tab-content[hidden] {
+  display: none;
+}
+
+#tab-home {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1rem;
+}
+
+#tab-home[hidden],
+#tab-inventory[hidden],
+#tab-people[hidden],
+#tab-events[hidden],
+#tab-settings[hidden] {
+  display: none;
+}
+
 @media (max-width: 1000px) {
-  #game-container {
+  #tab-home {
     grid-template-columns: 1fr;
   }
+}
+
+#tab-inventory,
+#tab-people,
+#tab-events,
+#tab-settings {
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 main#main-panel {
@@ -454,6 +507,47 @@ select {
 .ai-command-form input[type="text"] {
   flex: 1;
   margin: 0;
+}
+
+/* People & Events tabs */
+.npc-list,
+.event-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.npc-item {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.event-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.event-day {
+  color: var(--accent);
+  flex-shrink: 0;
+  font-weight: bold;
+}
+
+.event-text {
+  color: var(--text);
+}
+
+/* Settings tab */
+.settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .ai-savetools {
