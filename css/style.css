@@ -1,16 +1,18 @@
 :root {
-  --bg: #14181b;
-  --panel-bg: #1f2629;
-  --border: #34403f;
-  --text: #d8e0e0;
-  --text-dim: #8a9a98;
-  --accent: #6fbf73;
-  --danger: #c0392b;
-  --warning: #d4a017;
-  --health: #c0392b;
-  --hunger: #d4a017;
-  --thirst: #2f80c0;
-  --stamina: #6fbf73;
+  --bg: #0c100d;
+  --panel-bg: #161d18;
+  --border: #3a4a3a;
+  --text: #d4ddd0;
+  --text-dim: #7e8d7c;
+  --accent: #8fbf3f;
+  --danger: #8b1e1e;
+  --warning: #c9852b;
+  --health: #8b1e1e;
+  --hunger: #c9852b;
+  --thirst: #3f7d8c;
+  --stamina: #8fbf3f;
+  --button-bg: #1c241d;
+  --input-bg: #090c09;
 }
 
 * {
@@ -20,7 +22,10 @@
 body {
   margin: 0;
   font-family: 'Courier New', Courier, monospace;
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse at top, #1a2419 0%, transparent 60%),
+    radial-gradient(ellipse at bottom, #1a1310 0%, transparent 60%),
+    var(--bg);
   color: var(--text);
   min-height: 100vh;
 }
@@ -32,19 +37,19 @@ h1, h2, h3 {
 
 button {
   font-family: inherit;
-  background: #2a3438;
+  background: var(--button-bg);
   color: var(--text);
   border: 1px solid var(--border);
   padding: 0.5rem 0.9rem;
   border-radius: 4px;
   cursor: pointer;
   margin: 0.2rem;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 button:hover:not(:disabled) {
   background: var(--accent);
-  color: #14181b;
+  color: #0c100d;
   border-color: var(--accent);
 }
 
@@ -55,7 +60,7 @@ button:disabled {
 
 input[type="text"] {
   font-family: inherit;
-  background: #0f1416;
+  background: var(--input-bg);
   color: var(--text);
   border: 1px solid var(--border);
   padding: 0.5rem;
@@ -179,7 +184,7 @@ main#main-panel {
 }
 
 .stat-bar {
-  background: #0f1416;
+  background: var(--input-bg);
   border: 1px solid var(--border);
   border-radius: 4px;
   height: 12px;
@@ -223,14 +228,14 @@ main#main-panel {
 }
 
 .tag-safe {
-  background: rgba(111, 191, 115, 0.2);
+  background: rgba(143, 191, 63, 0.18);
   color: var(--accent);
   border: 1px solid var(--accent);
 }
 
 .tag-danger {
-  background: rgba(192, 57, 43, 0.2);
-  color: var(--danger);
+  background: rgba(139, 30, 30, 0.25);
+  color: #d97a7a;
   border: 1px solid var(--danger);
 }
 
