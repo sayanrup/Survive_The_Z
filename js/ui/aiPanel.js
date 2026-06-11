@@ -59,17 +59,15 @@ export function renderAiSettingsFields(aiSettings) {
 
 export function renderAiCommandForm(state, aiSettings) {
   const needsApiKey = aiSettings.mode !== AI_MODES.CLASSIC;
-
-  if (!needsApiKey) {
-    return `<p class="hint">Switch to an AI mode in Settings to type free-text actions and let the AI Game Master narrate outcomes.</p>`;
-  }
+  const placeholder = needsApiKey
+    ? "What do you do? e.g. ‘Search the kitchen for food’"
+    : 'Connect an AI mode in Settings to chat with the Game Master…';
 
   return `
-    <form id="ai-command-form" class="ai-command-form">
-      <input type="text" id="ai-command-input" placeholder="What do you do? e.g. 'Search the kitchen for food'" autocomplete="off" ${state.gameOver ? 'disabled' : ''} />
-      <button type="submit" ${state.gameOver ? 'disabled' : ''}>Do</button>
+    <form id="ai-command-form" class="chat-input-form">
+      <input type="text" id="ai-command-input" placeholder="${placeholder}" autocomplete="off" ${state.gameOver ? 'disabled' : ''} />
+      <button type="submit" class="chat-send-btn" ${state.gameOver ? 'disabled' : ''}>Send</button>
     </form>
-    <p class="hint">The AI Game Master narrates the outcome and may change your stats, inventory, or location.</p>
   `;
 }
 
