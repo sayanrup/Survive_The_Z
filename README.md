@@ -57,3 +57,7 @@ text without changing any calling code.
 I'm a product manager with 5+ years of experience, and this project is
 "vibe coded" - built by describing what I wanted and iterating with an
 AI coding assistant rather than writing the code by hand.
+
+## Copyright
+
+&copy; 2026 Sayan - an AI-enthusiastic PM
