@@ -44,6 +44,23 @@ js/
 - **Scavenge & Craft**: find materials and combine them into bandages,
   improved weapons, and medical kits.
 
+## Starting a game
+
+Starting a new game walks through three short screens:
+
+1. **Survivor name** - enter your character's name.
+2. **AI Game Master setup** - optionally connect an OpenRouter API key
+   and pick a model (or skip to play offline in Classic mode).
+3. **Choose your story** - pick one of ten pre-loaded storylines (each
+   inspired by a different zombie movie/show/game, e.g. "Dead in the
+   Mall", "Cordyceps Outbreak", "Train to Nowhere"), or write your own
+   custom storyline in a few sentences.
+
+The chosen storyline sets the opening narration and is woven into the AI
+Game Master's prompts so its narration matches the tone and setting you
+picked, while the underlying map, items, and survival mechanics stay the
+same.
+
 ## Narrative generation
 
 `js/api/aiClient.js` and `js/prompt/templates.js` provide a small,

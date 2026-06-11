@@ -2,14 +2,16 @@
 import { ITEMS } from '../data/items.js';
 import { LOCATIONS } from '../data/locations.js';
 
-export function buildSystemPrompt() {
+export function buildSystemPrompt(state) {
   const itemIds = Object.keys(ITEMS).join(', ');
   const locationIds = Object.values(LOCATIONS)
     .map((loc) => `${loc.id} (${loc.name})`)
     .join(', ');
 
-  return `You are the Game Master for "Survive The Z", a turn-based, text-driven zombie survival RPG. The player describes an action in plain English and you narrate the outcome, then report any mechanical effects.
+  const scenarioBlock = buildScenarioBlock(state && state.scenario);
 
+  return `You are the Game Master for "Survive The Z", a turn-based, text-driven zombie survival RPG. The player describes an action in plain English and you narrate the outcome, then report any mechanical effects.
+${scenarioBlock}
 Valid item IDs (only use these): ${itemIds}
 Valid location IDs (only use these, and only if connected to the player's current location): ${locationIds}
 
@@ -31,6 +33,29 @@ Rules:
 - xp_gained should be 0 for routine actions and a small positive number (5-20) for meaningful achievements (finding rare loot, surviving danger, completing something notable).
 - Keep the tone tense and grounded in a post-outbreak setting, written in second person ("you").
 - Omit fields you don't need, or set arrays to [] and numbers to 0.`;
+}
+
+function buildScenarioBlock(scenario) {
+  if (!scenario) return '';
+
+  const lines = [
+    '',
+    `Active storyline: ${scenario.title}${scenario.source ? ` (${scenario.source})` : ''}`,
+    `Setting: ${scenario.setting || 'Unspecified'}`,
+    `Premise: ${scenario.description}`,
+  ];
+  if (scenario.objectives && scenario.objectives.length) {
+    lines.push(`Objectives: ${scenario.objectives.join('; ')}`);
+  }
+  if (scenario.threats && scenario.threats.length) {
+    lines.push(`Threats to weave into the narrative: ${scenario.threats.join('; ')}`);
+  }
+  if (scenario.uniqueMechanics && scenario.uniqueMechanics.length) {
+    lines.push(`Flavor elements to reference: ${scenario.uniqueMechanics.join('; ')}`);
+  }
+  lines.push('Frame your narration around this storyline\'s tone and setting, while still using only the valid item/location IDs and JSON format below.');
+  lines.push('');
+  return lines.join('\n');
 }
 
 export function buildStateMessage(state) {

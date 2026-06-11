@@ -113,12 +113,108 @@ input[type="text"] {
   color: var(--text-dim);
 }
 
+/* AI setup & scenario selection screens */
+.setup-card {
+  max-width: 480px;
+  text-align: left;
+}
+
+.setup-card h1,
+.scenario-card-wrap h1 {
+  color: var(--accent);
+  text-align: center;
+}
+
+.setup-card .tagline,
+.scenario-card-wrap .tagline {
+  text-align: center;
+}
+
+.scenario-card-wrap {
+  max-width: 1000px;
+  text-align: left;
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.scenario-card {
+  background: var(--button-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.scenario-card:hover {
+  border-color: var(--accent);
+}
+
+.scenario-card.selected {
+  border-color: var(--accent);
+  background: rgba(143, 191, 63, 0.12);
+}
+
+.scenario-icon {
+  font-size: 1.5rem;
+}
+
+.scenario-card h3 {
+  margin: 0.25rem 0;
+}
+
+.scenario-source {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin: 0 0 0.4rem 0;
+}
+
+.scenario-desc {
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.scenario-tags .tag {
+  margin: 0 0.3rem 0.3rem 0;
+}
+
+.custom-scenario {
+  margin-bottom: 1.25rem;
+}
+
+.custom-scenario label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+
+.custom-scenario textarea {
+  font-family: inherit;
+  background: var(--input-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 100%;
+  resize: vertical;
+}
+
 /* Game layout */
 #game-screen {
   display: block;
   min-height: 100vh;
   align-items: stretch;
   padding: 0;
+}
+
+#game-screen[hidden] {
+  display: none;
 }
 
 #game-header {
@@ -237,6 +333,12 @@ main#main-panel {
   background: rgba(139, 30, 30, 0.25);
   color: #d97a7a;
   border: 1px solid var(--danger);
+}
+
+.tag-warning {
+  background: rgba(201, 133, 43, 0.18);
+  color: var(--warning);
+  border: 1px solid var(--warning);
 }
 
 /* Actions */

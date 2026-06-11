@@ -27,7 +27,7 @@ export async function sendPlayerAction(state, aiSettings, actionText) {
 
   const userMessage = buildStateMessage(state) + trimmed;
   const messages = [
-    { role: 'system', content: buildSystemPrompt() },
+    { role: 'system', content: buildSystemPrompt(state) },
     ...state.ai.history,
     { role: 'user', content: userMessage },
   ];

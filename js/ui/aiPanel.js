@@ -3,9 +3,7 @@
 import { MODELS, FREE_MODELS } from '../api/modelConfig.js';
 import { AI_MODES } from '../state/aiSettings.js';
 
-export function renderAiPanel(state, aiSettings) {
-  const usage = (state.ai && state.ai.usage) || { promptTokens: 0, completionTokens: 0, costUsd: 0 };
-
+export function renderAiSettingsFields(aiSettings) {
   const modeOptions = [
     { value: AI_MODES.CLASSIC, label: 'Classic (offline, no AI)' },
     { value: AI_MODES.SELECTED, label: 'Pick a model (OpenRouter)' },
@@ -51,6 +49,18 @@ export function renderAiPanel(state, aiSettings) {
     `;
   }
 
+  return `
+    <label for="ai-mode">Mode</label>
+    ${modeSelect}
+    ${apiKeyField}
+    ${modelField}
+  `;
+}
+
+export function renderAiPanel(state, aiSettings) {
+  const usage = (state.ai && state.ai.usage) || { promptTokens: 0, completionTokens: 0, costUsd: 0 };
+  const needsApiKey = aiSettings.mode !== AI_MODES.CLASSIC;
+
   const usageDisplay = needsApiKey
     ? `
     <div class="ai-usage">
@@ -73,10 +83,7 @@ export function renderAiPanel(state, aiSettings) {
   return `
     <h3>AI Game Master</h3>
     <div class="ai-settings">
-      <label for="ai-mode">Mode</label>
-      ${modeSelect}
-      ${apiKeyField}
-      ${modelField}
+      ${renderAiSettingsFields(aiSettings)}
     </div>
     ${usageDisplay}
     ${commandForm}
