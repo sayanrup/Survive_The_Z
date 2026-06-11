@@ -34,7 +34,7 @@ export async function travel(state, destinationId) {
   if (state.gameOver) return;
 
   state.world.currentLocation = destinationId;
-  const arriveText = await generateNarrative('travelArrive', { locationName: destination.name });
+  const arriveText = await generateNarrative('travelArrive', { locationName: destination.name, scenario: state.scenario });
   addLog(state, arriveText);
 
   if (destination.safe) {
@@ -57,7 +57,7 @@ export async function scavenge(state) {
 
   const found = await rollLoot(state, location);
   if (!found) {
-    const text = await generateNarrative('scavengeNothing');
+    const text = await generateNarrative('scavengeNothing', { scenario: state.scenario });
     addLog(state, text);
   }
 
@@ -73,7 +73,7 @@ async function rollLoot(state, location) {
       addItem(state, drop.id, qty);
       foundAny = true;
       const itemName = `${qty}x ${ITEMS[drop.id].name}`;
-      const text = await generateNarrative('scavengeFound', { itemName });
+      const text = await generateNarrative('scavengeFound', { itemName, scenario: state.scenario });
       addLog(state, text);
     }
   }

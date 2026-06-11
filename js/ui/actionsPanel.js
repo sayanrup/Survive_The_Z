@@ -1,8 +1,10 @@
 // Renders contextual actions as suggestion chips near the chat box:
-// exploration choices, combat choices, or the game-over message.
+// exploration choices, combat choices, AI free-text suggestions, or the
+// game-over message.
 import { LOCATIONS } from '../data/locations.js';
+import { AI_MODES } from '../state/aiSettings.js';
 
-export function renderActions(state) {
+export function renderActions(state, aiSettings) {
   if (state.gameOver) {
     return `
       <div class="game-over-banner">
@@ -11,6 +13,9 @@ export function renderActions(state) {
         <button data-action="restart">Start a New Game</button>
       </div>
     `;
+  }
+  if (aiSettings && aiSettings.mode !== AI_MODES.CLASSIC) {
+    return renderAiSuggestions(state);
   }
   if (state.combat) {
     return renderCombatActions(state);
@@ -53,4 +58,42 @@ function renderCombatActions(state) {
     </div>
     <p class="hint">Use a food, drink, or medical item from your Inventory tab to heal mid-fight.</p>
   `;
+}
+
+function renderAiSuggestions(state) {
+  const chips = buildSuggestions(state)
+    .map((text) => `<button class="chip" data-action="suggest-action" data-text="${escapeAttr(text)}">${text}</button>`)
+    .join('');
+
+  return `
+    <div class="suggestions-label">Suggested actions</div>
+    <div class="chip-row">${chips}</div>
+  `;
+}
+
+function buildSuggestions(state) {
+  if (state.combat) {
+    const c = state.combat;
+    return [
+      `Attack the ${c.enemyName}`,
+      `Try to flee from the ${c.enemyName}`,
+      `Look around for anything I can use as a weapon`,
+    ];
+  }
+
+  const loc = LOCATIONS[state.world.currentLocation];
+  const suggestions = loc.safe
+    ? ['Rest and recover until morning']
+    : ['Search the area for supplies'];
+
+  loc.connections.slice(0, 2).forEach((id) => {
+    suggestions.push(`Head to ${LOCATIONS[id].name}`);
+  });
+
+  suggestions.push('Look around and describe what you see');
+  return suggestions.slice(0, 4);
+}
+
+function escapeAttr(value) {
+  return String(value || '').replace(/"/g, '&quot;');
 }

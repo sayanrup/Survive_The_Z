@@ -47,5 +47,19 @@ export function pickVariant(templateName, context = {}) {
   if (!generator) return '';
   const variants = generator(context);
   if (!variants || variants.length === 0) return '';
-  return variants[Math.floor(Math.random() * variants.length)];
+  const text = variants[Math.floor(Math.random() * variants.length)];
+  const flavor = scenarioReminder(context.scenario);
+  return flavor ? `${text} ${flavor}` : text;
+}
+
+// Occasionally weaves a line drawn from the active scenario's threats or
+// unique mechanics into the narration, so storyline flavor (e.g. "Dead in
+// the Mall") shows up even in offline/Classic narration.
+function scenarioReminder(scenario) {
+  if (!scenario) return '';
+  const lines = [...(scenario.threats || []), ...(scenario.uniqueMechanics || [])];
+  if (lines.length === 0) return '';
+  if (Math.random() > 0.4) return '';
+  const line = lines[Math.floor(Math.random() * lines.length)];
+  return `You can't shake the thought: ${line.toLowerCase()}.`;
 }

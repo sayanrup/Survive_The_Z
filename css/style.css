@@ -455,6 +455,40 @@ main#main-panel {
   border-top-right-radius: 2px;
 }
 
+.chat-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.7rem 0.85rem;
+}
+
+.chat-loading span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  animation: chat-loading-bounce 1.2s infinite ease-in-out;
+}
+
+.chat-loading span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.chat-loading span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes chat-loading-bounce {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
 /* Suggested actions */
 .suggestions-label {
   font-size: 0.7rem;
