@@ -55,17 +55,41 @@
       <div id="day-counter">Day 1</div>
     </header>
 
+    <nav id="tab-nav">
+      <button class="tab-btn active" data-action="switch-tab" data-tab="home">Home</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="inventory">Inventory</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="people">People</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="events">Events</button>
+      <button class="tab-btn" data-action="switch-tab" data-tab="settings">Settings</button>
+    </nav>
+
     <div id="game-container">
-      <aside id="stats-panel" class="panel"></aside>
+      <div id="tab-home" class="tab-content">
+        <aside id="stats-panel" class="panel"></aside>
 
-      <main id="main-panel">
-        <section id="location-panel" class="panel"></section>
-        <section id="action-panel" class="panel"></section>
-        <section id="log-panel" class="panel"></section>
-        <section id="ai-panel" class="panel"></section>
-      </main>
+        <main id="main-panel">
+          <section id="location-panel" class="panel"></section>
+          <section id="action-panel" class="panel"></section>
+          <section id="log-panel" class="panel"></section>
+          <section id="ai-command-panel" class="panel"></section>
+        </main>
+      </div>
 
-      <aside id="inventory-panel" class="panel"></aside>
+      <div id="tab-inventory" class="tab-content" hidden>
+        <section id="inventory-panel" class="panel"></section>
+      </div>
+
+      <div id="tab-people" class="tab-content" hidden>
+        <section id="people-panel" class="panel"></section>
+      </div>
+
+      <div id="tab-events" class="tab-content" hidden>
+        <section id="events-panel" class="panel"></section>
+      </div>
+
+      <div id="tab-settings" class="tab-content" hidden>
+        <section id="settings-panel" class="panel"></section>
+      </div>
     </div>
   </div>
 

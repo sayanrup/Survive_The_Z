@@ -1,6 +1,6 @@
 // Application entry point: wires up the start screen, the main game loop
 // (via event delegation), and persistence.
-import { createNewGame, addLog } from './state/gameState.js';
+import { createNewGame, addLog, addEvent } from './state/gameState.js';
 import { saveGame, loadGame, hasSave, clearSave } from './state/storage.js';
 import { renderGame } from './ui/render.js';
 import { travel, scavenge } from './core/exploration.js';
@@ -28,6 +28,15 @@ const gameScreen = document.getElementById('game-screen');
 const continueBtn = document.getElementById('continue-btn');
 const screens = [startScreen, aiSetupScreen, scenarioScreen, gameScreen];
 
+const tabContents = {
+  home: document.getElementById('tab-home'),
+  inventory: document.getElementById('tab-inventory'),
+  people: document.getElementById('tab-people'),
+  events: document.getElementById('tab-events'),
+  settings: document.getElementById('tab-settings'),
+};
+const tabButtons = document.querySelectorAll('.tab-btn');
+
 if (hasSave()) {
   continueBtn.hidden = false;
 }
@@ -36,6 +45,15 @@ function showScreen(screen) {
   for (const s of screens) {
     s.hidden = s !== screen;
   }
+}
+
+function switchTab(tab) {
+  for (const [name, el] of Object.entries(tabContents)) {
+    el.hidden = name !== tab;
+  }
+  tabButtons.forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
 }
 
 function renderAiSetupFields() {
@@ -85,6 +103,39 @@ document.body.addEventListener('click', async (event) => {
       return;
     case 'export-save':
       if (state) exportSaveToFile(state);
+      return;
+    case 'switch-tab':
+      switchTab(target.dataset.tab);
+      return;
+    case 'save-game':
+      if (state) {
+        saveGame(state);
+        addLog(state, 'Game saved.');
+        renderGame(state, aiSettings);
+      }
+      return;
+    case 'load-game': {
+      const loaded = loadGame();
+      if (loaded) {
+        state = loaded;
+        showScreen(gameScreen);
+        switchTab('home');
+        renderGame(state, aiSettings);
+      }
+      return;
+    }
+    case 'reset-game':
+      clearSave();
+      state = null;
+      selectedScenarioId = null;
+      customStoryText = '';
+      continueBtn.hidden = true;
+      showScreen(startScreen);
+      return;
+    case 'exit-game':
+      if (state) saveGame(state);
+      continueBtn.hidden = !hasSave();
+      showScreen(startScreen);
       return;
   }
 
@@ -235,9 +286,12 @@ function startNewGame() {
   if (scenario) {
     addLog(state, `${scenario.icon ? scenario.icon + ' ' : ''}${scenario.title}`.trim());
     addLog(state, scenario.description);
+    addEvent(state, `Story begins: ${scenario.title}`);
   }
   addLog(state, 'You wake up at the survivor camp. The world outside has changed.');
+  addEvent(state, 'Woke up at the survivor camp.');
   showScreen(gameScreen);
+  switchTab('home');
   finishTurn();
 }
 
@@ -248,6 +302,7 @@ function continueGame() {
     return;
   }
   showScreen(gameScreen);
+  switchTab('home');
   renderGame(state, aiSettings);
 }
 

@@ -57,43 +57,19 @@ export function renderAiSettingsFields(aiSettings) {
   `;
 }
 
-export function renderAiPanel(state, aiSettings) {
-  const usage = (state.ai && state.ai.usage) || { promptTokens: 0, completionTokens: 0, costUsd: 0 };
+export function renderAiCommandForm(state, aiSettings) {
   const needsApiKey = aiSettings.mode !== AI_MODES.CLASSIC;
 
-  const usageDisplay = needsApiKey
-    ? `
-    <div class="ai-usage">
-      <span>Tokens used: ${usage.promptTokens + usage.completionTokens} (in ${usage.promptTokens} / out ${usage.completionTokens})</span>
-      <span>Estimated cost: $${usage.costUsd.toFixed(4)}</span>
-    </div>
-  `
-    : '';
+  if (!needsApiKey) {
+    return `<p class="hint">Switch to an AI mode in Settings to type free-text actions and let the AI Game Master narrate outcomes.</p>`;
+  }
 
-  const commandForm = needsApiKey
-    ? `
+  return `
     <form id="ai-command-form" class="ai-command-form">
       <input type="text" id="ai-command-input" placeholder="What do you do? e.g. 'Search the kitchen for food'" autocomplete="off" ${state.gameOver ? 'disabled' : ''} />
       <button type="submit" ${state.gameOver ? 'disabled' : ''}>Do</button>
     </form>
     <p class="hint">The AI Game Master narrates the outcome and may change your stats, inventory, or location.</p>
-  `
-    : `<p class="hint">Switch to an AI mode above to type free-text actions and let the AI Game Master narrate outcomes.</p>`;
-
-  return `
-    <h3>AI Game Master</h3>
-    <div class="ai-settings">
-      ${renderAiSettingsFields(aiSettings)}
-    </div>
-    ${usageDisplay}
-    ${commandForm}
-    <div class="ai-savetools">
-      <button type="button" data-action="export-save">Export Save</button>
-      <label class="file-label">
-        Import Save
-        <input type="file" id="import-save-input" accept="application/json" />
-      </label>
-    </div>
   `;
 }
 

@@ -44,6 +44,21 @@ js/
 - **Scavenge & Craft**: find materials and combine them into bandages,
   improved weapons, and medical kits.
 
+## Game screen tabs
+
+Once a game is started, the screen is split into five tabs:
+
+- **Home** - your stats, the current location, available actions, the
+  running event log, and the AI Game Master command box.
+- **Inventory** - your items and the crafting menu.
+- **People** - survivors and NPCs you've met, recorded with the day you
+  first encountered them.
+- **Events** - a "memory map" of key story moments (level-ups, scenario
+  beats, and other notable events flagged by the AI Game Master).
+- **Settings** - AI Game Master mode/API key configuration and usage
+  tracker, plus Save / Load / Reset / Exit buttons and Export/Import
+  Save controls.
+
 ## Starting a game
 
 Starting a new game walks through three short screens:

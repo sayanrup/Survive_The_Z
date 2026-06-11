@@ -22,7 +22,9 @@ Respond with ONLY a single JSON object, no markdown fences and no extra commenta
   "items_gained": [{"id": "item_id", "qty": 1}],
   "items_lost": [{"id": "item_id", "qty": 1}],
   "location": null,
-  "xp_gained": 0
+  "xp_gained": 0,
+  "key_event": null,
+  "npc_encountered": null
 }
 
 Rules:
@@ -31,6 +33,8 @@ Rules:
 - stat_changes are deltas (positive or negative), typically between -20 and 20, reflecting the risk/reward of the action.
 - items_lost should only include items the player currently has, in quantities they currently hold.
 - xp_gained should be 0 for routine actions and a small positive number (5-20) for meaningful achievements (finding rare loot, surviving danger, completing something notable).
+- "key_event" should be null for routine actions, or a short (1 sentence) summary of a significant, memorable plot moment worth recording in the player's memory map (e.g. discovering a major location, a turning point, a major loss or victory).
+- "npc_encountered" should be null unless the player meets or interacts with a named survivor/NPC for the first time or in a notable way, in which case provide {"name": "NPC name", "description": "1 sentence description of who they are"}.
 - Keep the tone tense and grounded in a post-outbreak setting, written in second person ("you").
 - Omit fields you don't need, or set arrays to [] and numbers to 0.`;
 }

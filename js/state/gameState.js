@@ -33,6 +33,8 @@ export function createNewGame(playerName, scenario = null) {
     },
     combat: null,
     log: [],
+    npcs: [],
+    events: [],
     gameOver: false,
     victoryPending: false,
     ai: {
@@ -101,6 +103,7 @@ export function grantXp(state, amount) {
     player.stamina = player.maxStamina;
     player.xpToNext = Math.round(player.xpToNext * 1.5);
     addLog(state, `You leveled up! You are now level ${player.level}.`);
+    addEvent(state, `Reached level ${player.level}.`);
   }
 }
 
@@ -109,5 +112,26 @@ export function checkGameOver(state) {
     state.player.health = 0;
     state.gameOver = true;
     addLog(state, 'Your vision fades to black. You did not survive.');
+    addEvent(state, 'You did not survive.');
+  }
+}
+
+export function addEvent(state, text) {
+  if (!text) return;
+  state.events = state.events || [];
+  state.events.push({ day: state.world.day, text });
+  if (state.events.length > 100) {
+    state.events.shift();
+  }
+}
+
+export function addNpc(state, npc) {
+  if (!npc || !npc.name) return;
+  state.npcs = state.npcs || [];
+  const existing = state.npcs.find((n) => n.name === npc.name);
+  if (existing) {
+    if (npc.description) existing.description = npc.description;
+  } else {
+    state.npcs.push({ name: npc.name, description: npc.description || '', firstSeenDay: state.world.day });
   }
 }

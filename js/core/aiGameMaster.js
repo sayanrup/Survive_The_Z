@@ -5,7 +5,7 @@ import { recordUsage } from '../api/costTracker.js';
 import { buildSystemPrompt, buildStateMessage } from '../prompt/genesisPrompt.js';
 import { FREE_MODELS } from '../api/modelConfig.js';
 import { AI_MODES } from '../state/aiSettings.js';
-import { addLog, addItem, removeItem, modifyStat, grantXp, checkGameOver } from '../state/gameState.js';
+import { addLog, addItem, removeItem, modifyStat, grantXp, checkGameOver, addEvent, addNpc } from '../state/gameState.js';
 import { LOCATIONS } from '../data/locations.js';
 import { ITEMS } from '../data/items.js';
 
@@ -133,6 +133,14 @@ export function applyAiChanges(state, changes) {
 
   if (typeof changes.xp_gained === 'number' && changes.xp_gained > 0) {
     grantXp(state, changes.xp_gained);
+  }
+
+  if (changes.key_event && typeof changes.key_event === 'string') {
+    addEvent(state, changes.key_event);
+  }
+
+  if (changes.npc_encountered && typeof changes.npc_encountered === 'object' && changes.npc_encountered.name) {
+    addNpc(state, changes.npc_encountered);
   }
 
   checkGameOver(state);
