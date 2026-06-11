@@ -54,7 +54,10 @@ Once a game is started, the screen is split into five tabs:
 - **People** - survivors and NPCs you've met, recorded with the day you
   first encountered them.
 - **Events** - a "memory map" of key story moments (level-ups, scenario
-  beats, and other notable events flagged by the AI Game Master).
+  beats, and other notable events flagged by the AI Game Master). This
+  same memory map is sent to the AI Game Master with every action, so it
+  stays consistent with earlier events and people even after the raw
+  chat history has been trimmed in long sessions.
 - **Settings** - AI Game Master mode/API key configuration and usage
   tracker, plus Save / Load / Reset / Exit buttons and Export/Import
   Save controls.

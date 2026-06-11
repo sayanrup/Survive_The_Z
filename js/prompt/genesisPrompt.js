@@ -68,6 +68,8 @@ export function buildStateMessage(state) {
     .map((entry) => `${ITEMS[entry.id] ? ITEMS[entry.id].name : entry.id} x${entry.qty}`)
     .join(', ') || 'empty';
 
+  const memoryMap = buildMemoryMapBlock(state);
+
   return `Current state:
 Day: ${state.world.day}
 Location: ${loc.id} (${loc.name}) - connections: ${loc.connections.join(', ')}
@@ -79,6 +81,32 @@ Level: ${state.player.level} (XP ${state.player.xp}/${state.player.xpToNext})
 Equipped weapon: ${state.player.equippedWeapon || 'none'}
 Equipped armor: ${state.player.equippedArmor || 'none'}
 Inventory: ${inventory}
-
+${memoryMap}
 Player action: `;
+}
+
+// Summarizes the recorded key events and NPCs so the AI Game Master keeps
+// track of the story so far even once older chat history is trimmed.
+function buildMemoryMapBlock(state) {
+  const events = (state.events || []).slice(-15);
+  const npcs = state.npcs || [];
+
+  if (!events.length && !npcs.length) return '';
+
+  const lines = [''];
+  if (events.length) {
+    lines.push('Memory map - key events so far:');
+    for (const ev of events) {
+      lines.push(`- Day ${ev.day}: ${ev.text}`);
+    }
+  }
+  if (npcs.length) {
+    lines.push('People met so far:');
+    for (const npc of npcs) {
+      lines.push(`- ${npc.name} (first met Day ${npc.firstSeenDay}): ${npc.description}`);
+    }
+  }
+  lines.push('Use this memory map to stay consistent with the story so far.');
+  lines.push('');
+  return lines.join('\n');
 }
