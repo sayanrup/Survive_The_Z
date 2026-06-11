@@ -1,0 +1,113 @@
+// Application entry point: wires up the start screen, the main game loop
+// (via event delegation), and persistence.
+import { createNewGame, addLog } from './state/gameState.js';
+import { saveGame, loadGame, hasSave, clearSave } from './state/storage.js';
+import { renderGame } from './ui/render.js';
+import { travel, scavenge } from './core/exploration.js';
+import { restAtCamp } from './core/survival.js';
+import { playerAttack, useItemInCombat, attemptFlee } from './core/combat.js';
+import { craftItem } from './core/crafting.js';
+import { useItem } from './core/inventory.js';
+import { ITEMS } from './data/items.js';
+
+let state = null;
+
+const startScreen = document.getElementById('start-screen');
+const gameScreen = document.getElementById('game-screen');
+const continueBtn = document.getElementById('continue-btn');
+
+if (hasSave()) {
+  continueBtn.hidden = false;
+}
+
+document.body.addEventListener('click', async (event) => {
+  const target = event.target.closest('[data-action]');
+  if (!target) return;
+  const action = target.dataset.action;
+
+  switch (action) {
+    case 'new-game':
+      startNewGame();
+      return;
+    case 'continue-game':
+      continueGame();
+      return;
+    case 'restart':
+      clearSave();
+      state = null;
+      continueBtn.hidden = true;
+      gameScreen.hidden = true;
+      startScreen.hidden = false;
+      return;
+  }
+
+  if (!state || state.gameOver) return;
+
+  switch (action) {
+    case 'travel':
+      await travel(state, target.dataset.target);
+      break;
+    case 'scavenge':
+      await scavenge(state);
+      break;
+    case 'rest':
+      await restAtCamp(state);
+      break;
+    case 'attack':
+      await playerAttack(state);
+      break;
+    case 'flee':
+      await attemptFlee(state);
+      break;
+    case 'use-item':
+      useItem(state, target.dataset.item);
+      break;
+    case 'use-item-combat':
+      await useItemInCombat(state, target.dataset.item);
+      break;
+    case 'equip-weapon':
+      state.player.equippedWeapon = target.dataset.item;
+      addLog(state, `You equip the ${ITEMS[target.dataset.item].name}.`);
+      break;
+    case 'equip-armor':
+      state.player.equippedArmor = target.dataset.item;
+      addLog(state, `You equip the ${ITEMS[target.dataset.item].name}.`);
+      break;
+    case 'craft':
+      craftItem(state, target.dataset.recipe);
+      break;
+    default:
+      return;
+  }
+
+  finishTurn();
+});
+
+function startNewGame() {
+  const nameInput = document.getElementById('player-name');
+  state = createNewGame(nameInput.value.trim());
+  addLog(state, 'You wake up at the survivor camp. The world outside has changed.');
+  startScreen.hidden = true;
+  gameScreen.hidden = false;
+  finishTurn();
+}
+
+function continueGame() {
+  state = loadGame();
+  if (!state) {
+    startNewGame();
+    return;
+  }
+  startScreen.hidden = true;
+  gameScreen.hidden = false;
+  renderGame(state);
+}
+
+function finishTurn() {
+  if (state.gameOver) {
+    clearSave();
+  } else {
+    saveGame(state);
+  }
+  renderGame(state);
+}
