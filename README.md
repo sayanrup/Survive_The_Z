@@ -51,3 +51,9 @@ swappable narration layer. Today it picks from local text templates so
 the game runs fully offline. The `AI_CONFIG` object in `aiClient.js` is
 a seam for later wiring up a live LLM API to generate dynamic narrative
 text without changing any calling code.
+
+## About me
+
+I'm a product manager with 5+ years of experience, and this project is
+"vibe coded" - built by describing what I wanted and iterating with an
+AI coding assistant rather than writing the code by hand.
