@@ -9,8 +9,12 @@ import { playerAttack, useItemInCombat, attemptFlee } from './core/combat.js';
 import { craftItem } from './core/crafting.js';
 import { useItem } from './core/inventory.js';
 import { ITEMS } from './data/items.js';
+import { sendPlayerAction } from './core/aiGameMaster.js';
+import { loadAiSettings, saveAiSettings } from './state/aiSettings.js';
+import { exportSaveToFile, importSaveFromFile } from './state/exportImport.js';
 
 let state = null;
+let aiSettings = loadAiSettings();
 
 const startScreen = document.getElementById('start-screen');
 const gameScreen = document.getElementById('game-screen');
@@ -38,6 +42,9 @@ document.body.addEventListener('click', async (event) => {
       continueBtn.hidden = true;
       gameScreen.hidden = true;
       startScreen.hidden = false;
+      return;
+    case 'export-save':
+      if (state) exportSaveToFile(state);
       return;
   }
 
@@ -83,6 +90,74 @@ document.body.addEventListener('click', async (event) => {
   finishTurn();
 });
 
+document.body.addEventListener('change', async (event) => {
+  const target = event.target;
+
+  if (target.id === 'ai-mode') {
+    aiSettings.mode = target.value;
+    saveAiSettings(aiSettings);
+    if (state) renderGame(state, aiSettings);
+    return;
+  }
+
+  if (target.id === 'ai-model') {
+    aiSettings.model = target.value;
+    saveAiSettings(aiSettings);
+    return;
+  }
+
+  if (target.id === 'import-save-input') {
+    const file = target.files[0];
+    if (!file) return;
+    try {
+      const imported = await importSaveFromFile(file);
+      state = imported;
+      saveGame(state);
+      startScreen.hidden = true;
+      gameScreen.hidden = false;
+      renderGame(state, aiSettings);
+    } catch (err) {
+      alert(err.message);
+    }
+    return;
+  }
+});
+
+document.body.addEventListener('input', (event) => {
+  const target = event.target;
+
+  if (target.id === 'ai-api-key') {
+    aiSettings.apiKey = target.value;
+    saveAiSettings(aiSettings);
+  } else if (target.id === 'ai-custom-model') {
+    aiSettings.customModel = target.value;
+    saveAiSettings(aiSettings);
+  }
+});
+
+document.body.addEventListener('submit', async (event) => {
+  if (event.target.id !== 'ai-command-form') return;
+  event.preventDefault();
+  if (!state || state.gameOver) return;
+
+  const input = document.getElementById('ai-command-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  input.disabled = true;
+  submitBtn.disabled = true;
+
+  try {
+    await sendPlayerAction(state, aiSettings, text);
+    input.value = '';
+  } catch (err) {
+    addLog(state, `AI error: ${err.message}`);
+  } finally {
+    finishTurn();
+  }
+});
+
 function startNewGame() {
   const nameInput = document.getElementById('player-name');
   state = createNewGame(nameInput.value.trim());
@@ -100,7 +175,7 @@ function continueGame() {
   }
   startScreen.hidden = true;
   gameScreen.hidden = false;
-  renderGame(state);
+  renderGame(state, aiSettings);
 }
 
 function finishTurn() {
@@ -109,5 +184,5 @@ function finishTurn() {
   } else {
     saveGame(state);
   }
-  renderGame(state);
+  renderGame(state, aiSettings);
 }

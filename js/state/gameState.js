@@ -34,6 +34,10 @@ export function createNewGame(playerName) {
     log: [],
     gameOver: false,
     victoryPending: false,
+    ai: {
+      history: [],
+      usage: { promptTokens: 0, completionTokens: 0, costUsd: 0 },
+    },
   };
 }
 

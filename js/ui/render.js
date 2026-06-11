@@ -4,8 +4,9 @@ import { renderLocation } from './locationPanel.js';
 import { renderActions } from './actionsPanel.js';
 import { renderInventory } from './inventoryPanel.js';
 import { renderLog } from './logPanel.js';
+import { renderAiPanel } from './aiPanel.js';
 
-export function renderGame(state) {
+export function renderGame(state, aiSettings) {
   document.getElementById('stats-panel').innerHTML = renderStats(state);
   document.getElementById('day-counter').textContent = `Day ${state.world.day}`;
 
@@ -20,4 +21,5 @@ export function renderGame(state) {
   }
 
   document.getElementById('log-panel').innerHTML = renderLog(state);
+  document.getElementById('ai-panel').innerHTML = renderAiPanel(state, aiSettings);
 }
