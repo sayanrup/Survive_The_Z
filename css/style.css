@@ -1,0 +1,301 @@
+:root {
+  --bg: #14181b;
+  --panel-bg: #1f2629;
+  --border: #34403f;
+  --text: #d8e0e0;
+  --text-dim: #8a9a98;
+  --accent: #6fbf73;
+  --danger: #c0392b;
+  --warning: #d4a017;
+  --health: #c0392b;
+  --hunger: #d4a017;
+  --thirst: #2f80c0;
+  --stamina: #6fbf73;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Courier New', Courier, monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.05em;
+}
+
+button {
+  font-family: inherit;
+  background: #2a3438;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0.2rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--accent);
+  color: #14181b;
+  border-color: var(--accent);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+input[type="text"] {
+  font-family: inherit;
+  background: #0f1416;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 100%;
+  margin: 0.5rem 0 1rem 0;
+}
+
+/* Start screen */
+.screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.screen[hidden] {
+  display: none;
+}
+
+.start-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.start-card h1 {
+  color: var(--accent);
+}
+
+.tagline {
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+}
+
+.start-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* Game layout */
+#game-screen {
+  display: block;
+  min-height: 100vh;
+  align-items: stretch;
+  padding: 0;
+}
+
+#game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel-bg);
+}
+
+#game-header h1 {
+  color: var(--accent);
+  font-size: 1.4rem;
+}
+
+#day-counter {
+  color: var(--text-dim);
+}
+
+#game-container {
+  display: grid;
+  grid-template-columns: 280px 1fr 300px;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1000px) {
+  #game-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+main#main-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+/* Stat bars */
+.level-info {
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 60px;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.stat-bar {
+  background: #0f1416;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.stat-fill {
+  height: 100%;
+  transition: width 0.2s ease;
+}
+
+.stat-fill.health { background: var(--health); }
+.stat-fill.hunger { background: var(--hunger); }
+.stat-fill.thirst { background: var(--thirst); }
+.stat-fill.stamina { background: var(--stamina); }
+
+.stat-value {
+  text-align: right;
+  color: var(--text-dim);
+}
+
+.equip-info {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.equip-label {
+  color: var(--text);
+}
+
+/* Location panel */
+.tag {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.tag-safe {
+  background: rgba(111, 191, 115, 0.2);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.tag-danger {
+  background: rgba(192, 57, 43, 0.2);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+/* Actions */
+.action-group {
+  margin-bottom: 0.5rem;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+}
+
+/* Log */
+.log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+}
+
+.log-list li {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.log-list li:first-child {
+  color: var(--text);
+}
+
+/* Inventory & crafting */
+.inventory-list,
+.recipe-list {
+  list-style: none;
+  margin: 0 0 1rem 0;
+  padding: 0;
+}
+
+.inventory-item,
+.recipe-item {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.recipe-item.unavailable {
+  opacity: 0.5;
+}
+
+.item-info {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.item-desc {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin: 0.25rem 0;
+}
+
+.item-qty {
+  color: var(--accent);
+}
+
+.empty {
+  color: var(--text-dim);
+  font-style: italic;
+}
